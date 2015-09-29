@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.AspNet.SignalR.Client;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace MonomgcbTest
 {
@@ -12,12 +14,29 @@ namespace MonomgcbTest
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Texture2D Ko, Je;
+        Texture2D Je;
+        Rectangle pos;
+
+        HubConnection Connection;
+        IHubProxy proxy;
 
         public Game1()
         {
+            pos = new Rectangle(0, 0, 100, 100);
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+
+            Connection = new HubConnection("http://localhost:15366/");
+            proxy = Connection.CreateHubProxy("GameHub");
+
+            Action<int,int> PositionReceived = position_received;
+            proxy.On("BroadcastPosition", PositionReceived);
+        }
+
+        private void position_received(int x, int y)
+        {
+            pos = new Rectangle(x, y, 100, 100);
         }
 
         /// <summary>
@@ -41,8 +60,7 @@ namespace MonomgcbTest
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            Ko = Content.Load<Texture2D>("\\Textures\\Koala.jpg");
-            Je = Content.Load<Texture2D>("\\Textures\\Jellyfish.jpg");
+            Je = Content.Load<Texture2D>("Textures\\Jellyfish");
             // TODO: use this.Content to load your game content here
         }
 
@@ -78,11 +96,13 @@ namespace MonomgcbTest
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            spriteBatch.Draw(Ko, new Rectangle(100, 100, 50, 50), Color.White);
-            spriteBatch.Draw(Je, new Rectangle(200, 200, 50, 50), Color.White);
+            spriteBatch.Draw(Je, new Rectangle((int)pos.X, (int)pos.Y, 50, 50), Color.White);
+            spriteBatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
+
+        
     }
 }
