@@ -5,26 +5,53 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Xna.Framework;
 using System.Timers;
+using Shared;
 
 namespace GameServer
 {
     public class GameHub : Hub
     {
-        Timer t;
+        bool playing = false;
+
+        List<Player> players = new List<Player>()
+        {
+            new Player
+            {
+                playerID = Guid.NewGuid(),
+                FirstName ="First",
+                SecondName ="Player",
+                GamerTag = "player 1",
+                UserName = "p1",
+                XP = 400 
+            }
+        };
+
+        List<Player> joined = new List<Player>();
+
         public GameHub()
         {
-            t = new Timer(500);
-            t.Elapsed += T_Elapsed;
-            t.Start();
-
-    }
-
-        private void T_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            Random r = new Random(DateTime.Now.Millisecond);
-            Vector2 Position = new Vector2(r.Next(50, 750), r.Next(50, 550));
-            Clients.All.BroadcastPosition(Position);
         }
-        
+
+        public Player join(string username)
+        {
+            if (!playing)
+            {
+                Player p = players.FirstOrDefault(pl => pl.UserName == username);
+                if (p != null && !joined.Contains(p)) // Valid player
+                {
+                    p.clientID = Context.ConnectionId;
+                    joined.Add(p);
+                    if (joined.Count() > 1)
+                    {
+                        Clients.All.play(joined); // Note clients must subscribe to this event
+                        playing = true;
+                    }
+                    return p;
+                }
+                else return null;
+            }
+            else return null;
+        }
+
     }
 }
