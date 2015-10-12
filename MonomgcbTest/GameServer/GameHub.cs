@@ -22,7 +22,8 @@ namespace GameServer
                 SecondName ="Player",
                 GamerTag = "player 1",
                 UserName = "p1",
-                XP = 400 
+                XP = 400,
+                scale = 1 
             }
         };
 
@@ -51,6 +52,20 @@ namespace GameServer
                 else return null;
             }
             else return null;
+        }
+
+        public void update()
+        {
+            if (playing)
+            {
+                foreach (Player p in players)
+                {
+                    if (p.clientID == Context.ConnectionId)
+                    {
+                        Clients.Others.getUpdate();
+                    }
+                }
+            }
         }
 
     }

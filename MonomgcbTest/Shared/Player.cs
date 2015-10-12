@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +15,7 @@ namespace Shared
         public string SecondName;
         public int XP;
         public string clientID;
+        public int scale;
     }
 
 }
