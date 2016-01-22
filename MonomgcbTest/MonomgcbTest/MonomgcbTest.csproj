@@ -59,8 +59,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Textures\Jellyfish.jpg" />
-    <Content Include="Content\Textures\Koala.jpg" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +67,8 @@
   <ItemGroup>
     <Folder Include="Content\Audio\" />
     <Folder Include="Content\Fonts\" />
+    <Folder Include="Content\Textures\" />
+    <Folder Include="GameEngine\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
